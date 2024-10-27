@@ -11,6 +11,12 @@ uniform float uDisplace;
 uniform float uSpread;
 uniform float uNoise;
 
+
+uniform vec3 color1;
+uniform vec3 color2;
+uniform vec3 color3;
+uniform vec3 color4;
+
 #define PI 3.14159265358979
 #define MOD3 vec3(.1031,.11369,.13787)
 

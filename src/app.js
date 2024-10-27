@@ -16,12 +16,14 @@ init();
 
 let gui = new GUI();
 
-const torus = new THREE.Mesh(
-  new THREE.TorusGeometry(1, 0.3, 100, 100),
+// Utiliser ShaderMaterial pour la sphère avec les mêmes shaders et uniforms
+const sphere = new THREE.Mesh(
+  new THREE.SphereGeometry(1, 16, 16),
   new THREE.ShaderMaterial({
     vertexShader,
     fragmentShader,
     side: THREE.DoubleSide,
+    // wireframe: true,
     uniforms: {
       uTime: { value: 0 },
       uResolution: { value: new THREE.Vector2() },
@@ -32,17 +34,21 @@ const torus = new THREE.Mesh(
   })
 );
 
-scene.add(torus);
 
+
+scene.add(sphere);
+
+
+// Ajout du post-traitement
 let composer = new EffectComposer(gl);
 composer.addPass(new RenderPass(scene, camera));
 
+// Configuration GUI pour ajuster les paramètres des shaders
 gui
-  .add(torus.material.uniforms.uDisplace, 'value', 0, 2, 0.1)
-  .name('displacemnt');
-gui.add(torus.material.uniforms.uSpread, 'value', 0, 2, 0.1).name('spread');
-gui.add(torus.material.uniforms.uNoise, 'value', 10, 25, 0.1).name('noise');
-
+  .add(sphere.material.uniforms.uDisplace, 'value', 0, 2, 0.1)
+  .name('displacement');
+gui.add(sphere.material.uniforms.uSpread, 'value', 0, 2, 0.1).name('spread');
+gui.add(sphere.material.uniforms.uNoise, 'value', 10, 25, 0.1).name('noise');
 
 const bloomPass = new UnrealBloomPass(
   new THREE.Vector2(window.innerWidth, window.innerHeight),
@@ -57,10 +63,16 @@ const clock = new THREE.Clock();
 
 let animate = () => {
   const elapsedTime = clock.getElapsedTime();
-  torus.material.uniforms.uTime.value = elapsedTime;
-  torus.rotation.z = Math.sin(elapsedTime) / 4 + elapsedTime / 20 + 5;
+  
+  // Mise à jour du temps pour les deux matériaux
+  sphere.material.uniforms.uTime.value = elapsedTime;
+  sphere.rotation.z = Math.sin(elapsedTime) / 4 + elapsedTime / 20 + 5;
+
+
+  
   composer.render();
   controls.update();
   requestAnimationFrame(animate);
 };
+
 animate();

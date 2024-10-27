@@ -18,11 +18,12 @@ let gui = new GUI();
 
 // Utiliser ShaderMaterial pour la sphère avec les mêmes shaders et uniforms
 const sphere = new THREE.Mesh(
-  new THREE.SphereGeometry(1, 16, 16),
+  new THREE.CircleGeometry(3, 30),
   new THREE.ShaderMaterial({
     vertexShader,
     fragmentShader,
-    side: THREE.DoubleSide,
+    
+
     // wireframe: true,
     uniforms: {
       uTime: { value: 0 },
@@ -52,8 +53,8 @@ gui.add(sphere.material.uniforms.uNoise, 'value', 10, 25, 0.1).name('noise');
 
 const bloomPass = new UnrealBloomPass(
   new THREE.Vector2(window.innerWidth, window.innerHeight),
-  1.4,
-  0.0001,
+  1.2,
+  0.00001,
   0.01
 );
 
